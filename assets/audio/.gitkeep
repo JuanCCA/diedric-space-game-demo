@@ -1,0 +1,13 @@
+spaceship-game
+├── src
+│   ├── css
+│   │   └── style.css
+│   ├── js
+│   │   ├── game.js
+│   │   ├── ship.js
+│   │   └── controls.js
+│   └── index.html
+├── assets
+│   └── audio
+│       └── .gitkeep
+└── README.md

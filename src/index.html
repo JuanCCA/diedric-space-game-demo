@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nave Espacial - Vista Diédrica</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <div id="topPanel">
+            <div class="panelTitle">Vista Superior (X-Y)</div>
+            <canvas id="canvasTop"></canvas>
+        </div>
+        <div id="bottomPanel">
+            <div class="panelTitle">Vista Lateral (X-Z)</div>
+            <canvas id="canvasSide"></canvas>
+        </div>
+        <div id="ui">
+            <h2>Panel de Control</h2>
+            <div id="stats">
+                <div>Velocidad X: <span id="speedX">0</span></div>
+                <div>Velocidad Y: <span id="speedY">0</span></div>
+                <div>Velocidad Z: <span id="speedZ">0</span></div>
+                <div>Posición X: <span id="posX">0</span></div>
+                <div>Posición Y: <span id="posY">0</span></div>
+                <div>Posición Z: <span id="posZ">0</span></div>
+            </div>
+            <div id="controls">
+                <h3>Controles:</h3>
+                <ul>
+                    <li>W/S: Mover adelante/atrás (eje Y)</li>
+                    <li>A/D: Mover izquierda/derecha (eje X)</li>
+                    <li>Q/E: Subir/Bajar (eje Z)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="js/ship.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: sans-serif;
+    background: #05060a;
+    color: #e6eef8;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#topPanel, #bottomPanel {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #02020a;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#ui {
+    height: 220px;
+    box-sizing: border-box;
+    padding: 12px;
+    background: #111;
+    color: #eee;
+    overflow: auto;
+}
+
+.panelTitle {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    padding: 4px 6px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+#stats {
+    margin: 10px 0;
+    font-family: monospace;
+}
+
+#controls {
+    margin-top: 15px;
+}
+
+#controls ul {
+    margin-left: 20px;
+}
