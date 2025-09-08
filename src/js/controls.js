@@ -38,6 +38,6 @@ class Controls {
 
         // Up/Down (Z axis)
         if (this.keys.q) this.ship.applyForce(0, 0, -this.force);
-        if (this.keys.e) this.ship.applyForce(0, 0, this.force);q
+        if (this.keys.e) this.ship.applyForce(0, 0, this.force);
     }
 }
