@@ -19,19 +19,29 @@
         <div id="ui">
             <h2>Panel de Control</h2>
             <div id="stats">
+                <h3>Nave Espacial</h3>
                 <div>Velocidad X: <span id="speedX">0</span></div>
                 <div>Velocidad Y: <span id="speedY">0</span></div>
                 <div>Velocidad Z: <span id="speedZ">0</span></div>
                 <div>Posición X: <span id="posX">0</span></div>
                 <div>Posición Y: <span id="posY">0</span></div>
                 <div>Posición Z: <span id="posZ">0</span></div>
+                
+                <h3>Cámara</h3>
+                <div>Zoom: <span id="cameraScale">1.0</span>x</div>
+                <div>Siguiendo nave: <span id="cameraFollow">Sí</span></div>
+                <div>Planetas visibles: <span id="planetsCount">0</span></div>
             </div>
             <div id="controls">
                 <h3>Controles:</h3>
                 <ul>
+                    <li><strong>Nave:</strong></li>
                     <li>W/S: Mover adelante/atrás (eje Y)</li>
                     <li>A/D: Mover izquierda/derecha (eje X)</li>
                     <li>Q/E: Subir/Bajar (eje Z)</li>
+                    <li><strong>Cámara:</strong></li>
+                    <li>+/-: Zoom acercar/alejar</li>
+                    <li>C: Alternar seguimiento de nave</li>
                 </ul>
             </div>
         </div>

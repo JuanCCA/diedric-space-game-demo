@@ -33,10 +33,20 @@ class Ship {
         this.acceleration = { x: 0, y: 0, z: 0 };
     }
 
-    draw(ctx, view = 'top') {
+    draw(ctx, view = 'top', camera = null) {
         ctx.save();
-        ctx.translate(ctx.canvas.width / 2 + this.position.x, 
-                     ctx.canvas.height / 2 + (view === 'top' ? this.position.y : this.position.z));
+        
+        if (camera) {
+            // Draw ship relative to camera position
+            const screenX = ctx.canvas.width / 2 + (this.position.x - camera.x) * camera.scale;
+            const screenY = ctx.canvas.height / 2 + (view === 'top' ? 
+                (this.position.y - camera.y) : (this.position.z - camera.z)) * camera.scale;
+            ctx.translate(screenX, screenY);
+        } else {
+            // Original positioning (centered)
+            ctx.translate(ctx.canvas.width / 2 + this.position.x, 
+                         ctx.canvas.height / 2 + (view === 'top' ? this.position.y : this.position.z));
+        }
         
         ctx.beginPath();
         if (view === 'top') {
@@ -50,7 +60,10 @@ class Ship {
         }
         ctx.closePath();
         ctx.strokeStyle = '#0f0';
+        ctx.lineWidth = 2;
         ctx.stroke();
+        ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+        ctx.fill();
         ctx.restore();
     }
 
