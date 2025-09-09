@@ -5,32 +5,61 @@ class Ship {
         this.acceleration = { x: 0, y: 0, z: 0 };
         this.maxSpeed = 5;
         this.friction = 0.98;
-        this.size = 20;
+        this.size = 10;
     }
 
     update() {
-        // Update velocity based on acceleration
-        this.velocity.x += this.acceleration.x;
-        this.velocity.y += this.acceleration.y;
-        this.velocity.z += this.acceleration.z;
+        if (this.orbitingPlanet) {
+            // --- ORBIT MODE ---
+            this.orbitAngle += this.orbitSpeed;
 
-        // Apply friction
-        this.velocity.x *= this.friction;
-        this.velocity.y *= this.friction;
-        this.velocity.z *= this.friction;
+            this.position.x = this.orbitingPlanet.position.x + Math.cos(this.orbitAngle) * this.orbitRadius;
+            this.position.y = this.orbitingPlanet.position.y + Math.sin(this.orbitAngle) * this.orbitRadius;
+            this.position.z = this.orbitingPlanet.position.z; // órbita en plano XY por simplicidad
 
-        // Limit speed
-        this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxSpeed), -this.maxSpeed);
-        this.velocity.y = Math.max(Math.min(this.velocity.y, this.maxSpeed), -this.maxSpeed);
-        this.velocity.z = Math.max(Math.min(this.velocity.z, this.maxSpeed), -this.maxSpeed);
+        } else {
+            // --- NORMAL MODE ---
+            this.velocity.x += this.acceleration.x;
+            this.velocity.y += this.acceleration.y;
+            this.velocity.z += this.acceleration.z;
 
-        // Update position
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
-        this.position.z += this.velocity.z;
+            this.velocity.x *= this.friction;
+            this.velocity.y *= this.friction;
+            this.velocity.z *= this.friction;
 
-        // Reset acceleration
-        this.acceleration = { x: 0, y: 0, z: 0 };
+            this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxSpeed), -this.maxSpeed);
+            this.velocity.y = Math.max(Math.min(this.velocity.y, this.maxSpeed), -this.maxSpeed);
+            this.velocity.z = Math.max(Math.min(this.velocity.z, this.maxSpeed), -this.maxSpeed);
+
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+            this.position.z += this.velocity.z;
+
+            this.acceleration = { x: 0, y: 0, z: 0 };
+        }
+    }
+
+    engageOrbit(planet) {
+        const dx = this.position.x - planet.position.x;
+        const dy = this.position.y - planet.position.y;
+        this.orbitRadius = Math.sqrt(dx*dx + dy*dy);
+        this.orbitAngle = Math.atan2(dy, dx);
+
+        // sincronizar velocidad orbital con planeta si quieres
+        this.orbitSpeed = 0.02 + planet.orbitalSpeed;
+
+        this.orbitingPlanet = planet;
+    }
+
+    disengageOrbit() {
+        if (this.orbitingPlanet) {
+            // Le damos velocidad tangencial al soltar
+            this.velocity.x = -Math.sin(this.orbitAngle) * this.orbitRadius * this.orbitSpeed;
+            this.velocity.y =  Math.cos(this.orbitAngle) * this.orbitRadius * this.orbitSpeed;
+            this.velocity.z = 0;
+
+            this.orbitingPlanet = null;
+        }
     }
 
     draw(ctx, view = 'top', camera = null) {
