@@ -25,15 +25,6 @@ canvas {
     display: block;
 }
 
-#ui {
-    height: 220px;
-    box-sizing: border-box;
-    padding: 12px;
-    background: #111;
-    color: #eee;
-    overflow: auto;
-}
-
 .panelTitle {
     position: absolute;
     left: 8px;
@@ -44,17 +35,80 @@ canvas {
     font-size: 13px;
 }
 
+#ui {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px 15px;
+    background: rgba(10, 10, 20, 0.9);
+    border-top: 2px solid #0ff;
+    box-shadow: 0 -2px 15px rgba(0, 255, 255, 0.3);
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.75em;
+    color: #0ff;
+    z-index: 10;
+}
+
+#ui h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.4em;
+    text-align: center;
+    color: #0ff;
+    text-shadow: 0 0 8px #0ff;
+    border-bottom: 1px solid rgba(0,255,255,0.4);
+    padding-bottom: 5px;
+}
+
+#ui h3 {
+    margin: 10px 0 5px 0;
+    font-size: 1.1em;
+    color: #0ff;
+    text-shadow: 0 0 6px #0ff;
+}
+
 #stats {
-    margin: 10px 0;
-    font-family: monospace;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+#stats div {
+    min-width: 150px;
+    font-size: 0.95em;
+    color: #9ff;
+}
+
+#stats span {
+    color: #fff;
+    font-weight: bold;
 }
 
 #controls {
     margin-top: 15px;
+    border-top: 1px dashed rgba(0,255,255,0.3);
+    padding-top: 10px;
 }
 
 #controls ul {
-    margin-left: 20px;
+    list-style: none;
+    padding-left: 0;
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+    color: #9ff;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+#controls li {
+    margin: 3px 0;
+}
+
+#controls strong {
+    color: #0ff;
+    text-shadow: 0 0 6px #0ff;
 }
 
 .separador {
