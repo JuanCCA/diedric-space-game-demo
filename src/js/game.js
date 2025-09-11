@@ -1,11 +1,36 @@
 class Game {
     constructor() {
+
+        // Canvas
         this.canvasTop = document.getElementById('canvasTop');
         this.canvasSide = document.getElementById('canvasSide');
         this.ctxTop = this.canvasTop.getContext('2d');
         this.ctxSide = this.canvasSide.getContext('2d');
+        const { top: topTop, left: leftTop, width: widthTop, height: heightTop } = this.canvasTop.getBoundingClientRect();
+        const { top: topBottom, left: leftBottom, width: widthBottom, height: heightBottom } = this.canvasSide.getBoundingClientRect();
+
+        this.containerSizes = {
+            heightTopContainer: {
+                init: topTop,
+                end: topTop + heightTop
+            },
+    
+            leftTopContainer: {
+                init: leftTop,
+                end: leftTop + widthTop
+            },
+    
+            heightBottomContainer: {
+                init: topBottom,
+                end: topBottom + heightBottom
+            },
+    
+            leftBottomContainer: {
+                init: leftBottom,
+                end: leftBottom + widthBottom
+            },
+        }
         
-        // Camera system for expanded view
         this.camera = {
             x: 0,
             y: 0,
@@ -17,10 +42,8 @@ class Game {
         this.ship = new Ship();
         this.controls = new Controls(this.ship, this);
         
-        // Create solar system with central star
         this.star = Star.createSun({ x: 0, y: 0, z: 0 });
         
-        // Create orbital planets
         this.planets = [
             new Planet({
                 name: 'Mercury',
@@ -43,7 +66,7 @@ class Game {
                 orbitalSpeed: 0.0075,
                 orbitalAngle: Math.PI * 0.3,
                 inclination: 0.02,
-                rotationSpeed: -0.02, // Rotación retrógrada
+                rotationSpeed: -0.02, 
                 showTrail: true
             }),
             new Planet({
@@ -119,25 +142,23 @@ class Game {
             })
         ];
         
-        // Performance helpers
         this.animationId = null;
         this.paused = false;
         this.lastUIUpdate = 0;
         this.uiUpdateInterval = 100; // ms
 
-        // Reusable array to avoid allocations each frame
         this._drawables = [];
 
         this.resize();
 
-        // Debounced resize to avoid thrashing on continuous resize
+        // Debounce para evitar resizes infinitos
         let resizeTimer = null;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => this.resize(), 150);
         });
 
-        // Pause when tab is hidden to save CPU
+        // Pausar juego cuando no este en la ventana para ahorrar CPU // TODO: cuando sales y entras de la ventana, el juego se va acelerando
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.paused = true;
@@ -154,7 +175,7 @@ class Game {
     }
 
     resize() {
-    // Respect devicePixelRatio for crisp rendering, but cap to limit fill cost
+    // Con respecto a ratio pixel
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     this.canvasTop.width = Math.round(this.canvasTop.clientWidth * dpr);
@@ -169,7 +190,7 @@ class Game {
 
     updateCamera() {
         if (this.camera.followShip) {
-            // Smooth camera following
+            // Seguimioento suave
             this.camera.x += (this.ship.position.x - this.camera.x) * 0.1;
             this.camera.y += (this.ship.position.y - this.camera.y) * 0.1;
             this.camera.z += (this.ship.position.z - this.camera.z) * 0.1;
@@ -207,46 +228,38 @@ class Game {
     }
 
     drawSolarSystem() {
-        // Backwards-compatible: keep method but delegate to depth-sorted draw per view
         this.drawScene('top', this.ctxTop);
         this.drawScene('side', this.ctxSide);
     }
 
-    // Draw all scene objects for a given view, sorted by depth so closer objects overlap
     drawScene(view, ctx) {
-        // Build list of drawables: star, planets, ship
         const drawables = [];
 
-        // Helper to get depth according to view
+        // Tener en cuenta la profundidad y overlaping
         const getDepth = (pos) => {
             if (view === 'top') {
-                // In top view we project X/Y -> depth is Z
+                // En top X/Y -> Z
                 return (pos.z !== undefined ? pos.z : 0) - this.camera.z;
             } else {
-                // In side view we project X/Z -> depth is Y
+                // En bottom X/Z -> Y
                 return (pos.y !== undefined ? pos.y : 0) - this.camera.y;
             }
         };
 
-        // Star
         if (this.star && this.star.position) {
             drawables.push({ obj: this.star, depth: getDepth(this.star.position) });
         }
 
-        // Planets
         this.planets.forEach(p => drawables.push({ obj: p, depth: getDepth(p.position) }));
 
-        // Ship
         if (this.ship && this.ship.position) {
             drawables.push({ obj: this.ship, depth: getDepth(this.ship.position) });
         }
 
-        // Sort by depth: farthest first (smaller depth value = farther if camera ahead), then draw
         drawables.sort((a, b) => a.depth - b.depth);
 
-        // Draw each object using its own draw method
         drawables.forEach(item => {
-            // Some objects may not accept the same signature; assume (ctx, view, camera)
+            // Asegura que el draw sea una funcion, por si me paso de listo
             if (typeof item.obj.draw === 'function') {
                 item.obj.draw(ctx, view, this.camera);
             }
@@ -291,15 +304,15 @@ class Game {
         this.drawGrid(this.ctxTop);
         this.drawGrid(this.ctxSide);
 
-    // Update objects
-    this.star.update();
-    this.planets.forEach(planet => planet.update());
-    this.controls.update();
-    this.ship.update();
+        // Update objects
+        this.star.update();
+        this.planets.forEach(planet => planet.update());
+        this.controls.update();
+        this.ship.update();
 
-    // Draw scene per view with depth-sorting so nearer objects overlap farther ones
-    this.drawScene('top', this.ctxTop);
-    this.drawScene('side', this.ctxSide);
+        // Draw scene per view with depth-sorting so nearer objects overlap farther ones
+        this.drawScene('top', this.ctxTop);
+        this.drawScene('side', this.ctxSide);
 
         // Update UI
         this.updateUI();
@@ -308,7 +321,7 @@ class Game {
     }
 }
 
-// Start the game when the window loads
+// Cuando ventana carge empieza el juego
 window.addEventListener('load', () => {
     new Game();
 });

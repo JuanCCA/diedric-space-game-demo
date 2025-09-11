@@ -20,6 +20,34 @@ class Controls {
 
         window.addEventListener('keydown', this.handleKeyDown.bind(this));
         window.addEventListener('keyup', this.handleKeyUp.bind(this));
+        window.addEventListener('click', this.handleClick.bind(this));
+    }
+
+    handleClick(event) { // TODO: poder clikar en objetos dentro de los canvas
+        const { clientX: x, clientY: y } = event;
+        const {heightTopContainer, leftTopContainer, heightBottomContainer, leftBottomContainer} = this.game.containerSizes;
+
+        function isInside(container, x, y) {
+        return (
+            container.height.init < y && y < container.height.end &&
+            container.left.init < x && x < container.left.end
+        );
+        }
+
+
+        this.game.planets.forEach(planet => {
+            console.log(planet.position.x, planet.position.y);
+            console.log(x, y)
+        });
+        
+        if (isInside({ height: heightTopContainer, left: leftTopContainer }, x, y)) {
+        console.log('top');
+        }
+
+        if (isInside({ height: heightBottomContainer, left: leftBottomContainer }, x, y)) {
+        console.log('bottom');
+        }
+        
     }
 
     handleKeyDown(event) {
@@ -55,7 +83,7 @@ class Controls {
 
     update() {
         const planets = this.game ? this.game.planets : [];
-        // 🚀 Movimiento libre
+
         if (!this.ship.orbitingPlanet) { 
             if (this.keys.w) this.ship.applyForce(0, -this.force, 0);
             if (this.keys.s) this.ship.applyForce(0, this.force, 0);
@@ -67,7 +95,6 @@ class Controls {
             if (this.keys.arrowdown) this.ship.applyForce(0, 0, this.force);
         }
 
-        // 🎥 Cámara
         if (this.game && this.game.camera) {
             if (this.keys['+']) this.game.camera.scale = Math.min(this.game.camera.scale * 1.02, 3);
             if (this.keys['-']) this.game.camera.scale = Math.max(this.game.camera.scale * 0.98, 0.2);
@@ -80,15 +107,13 @@ class Controls {
             }
         }
 
-        // 🌌 Órbita con Espacio
         if (this.keys[' '] && !this.spacePressed) {
             this.spacePressed = true;
 
             if (this.ship.orbitingPlanet) {
-                // Ya está en órbita → salir
+                // Ya está en órbita -> salir
                 this.ship.disengageOrbit();
             } else {
-                console.log('Intentando entrar en órbita...', planets);
                 // Buscar planeta cercano
                 for (let planet of planets) {
                     const dx = this.ship.position.x - planet.position.x;
@@ -96,7 +121,9 @@ class Controls {
                     const dz = this.ship.position.z - planet.position.z;
                     const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
                     if (distance < planet.radius * 5) {
+                        console.log('Orbitando en -> ', planet.name);
                         this.ship.engageOrbit(planet);
+                        this.showPlanetInfo(planet);
                         break;
                     }
                 }
@@ -105,4 +132,19 @@ class Controls {
             this.spacePressed = false;
         }
     }
+
+    showPlanetInfo(planet) {
+        document.getElementById("planetName").textContent = planet.name || "Planeta sin nombre";
+        document.getElementById("planetRadius").textContent = planet.radius || "N/A";
+        document.getElementById("planetX").textContent = planet.position.x.toFixed(2);
+        document.getElementById("planetY").textContent = planet.position.y.toFixed(2);
+        document.getElementById("planetZ").textContent = planet.position.z.toFixed(2);
+
+        document.getElementById("planetInfo").classList.remove("hidden");
+    }
+
+    hidePlanetInfo() {
+        document.getElementById("planetInfo").classList.add("hidden");
+    }
+
 }

@@ -45,7 +45,7 @@ class Ship {
         this.orbitRadius = Math.sqrt(dx*dx + dy*dy);
         this.orbitAngle = Math.atan2(dy, dx);
 
-        // sincronizar velocidad orbital con planeta si quieres
+        // sincronizar velocidad orbital con planeta
         this.orbitSpeed = 0.02 + planet.orbitalSpeed;
 
         this.orbitingPlanet = planet;

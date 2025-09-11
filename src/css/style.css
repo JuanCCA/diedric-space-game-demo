@@ -117,3 +117,45 @@ canvas {
     background-color: #333; 
     margin: 5px 0;    
 }
+
+#planetInfo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background: rgba(10, 10, 30, 0.95);
+    border: 2px solid #0ff;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,255,255,0.6);
+    font-family: "Consolas", "Courier New", monospace;
+    color: #0ff;
+    z-index: 200;
+    text-align: center;
+}
+
+#planetInfo h2 {
+    margin-bottom: 15px;
+    text-shadow: 0 0 8px #0ff;
+}
+
+#planetInfo button {
+    margin-top: 15px;
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid #0ff;
+    color: #0ff;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+#planetInfo button:hover {
+    background: #0ff;
+    color: #000;
+}
+
+.hidden {
+    display: none;
+}
